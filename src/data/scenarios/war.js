@@ -2,7 +2,7 @@ export const war = {
   id: "war",
   title: "Sõjaline konflikt: esimesed otsused",
   timeMinutes: 7,
-  difficulty: "Hard",
+  difficulty: "Raske",
   intro:
     "Kuulad ametlikke teateid, olukord on pingeline. Eesmärk: tegutseda rahulikult, järgida ametlikke juhiseid ja vältida ohtlikku käitumist.",
   sources: [

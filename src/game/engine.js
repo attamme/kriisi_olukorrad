@@ -1,6 +1,6 @@
 export function createInitialState() {
   return {
-    mode: "menu", // menu | play | result
+    mode: "menu",
     scenarioId: null,
     nodeId: null,
     history: [],

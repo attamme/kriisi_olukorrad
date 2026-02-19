@@ -2,7 +2,7 @@ export const water = {
   id: "water",
   title: "Veekatkestus: hommik ja koolipäev",
   timeMinutes: 6,
-  difficulty: "Easy",
+  difficulty: "Kerge",
   intro:
     "Kraanist ei tule vett. Sul on üks 1.5L pudel. Eesmärk: kasutada vett mõistlikult ja säilitada hügieen ning ohutus.",
   sources: [{ label: "Olevalmis: Veekatkestus", url: "https://www.olevalmis.ee/veekatkestus" }],

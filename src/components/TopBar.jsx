@@ -20,7 +20,7 @@ export default function TopBar({
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+      <div className="topbar-actions">
         {rightPill ? (
           <span className="pill">
             <Timer size={16} />

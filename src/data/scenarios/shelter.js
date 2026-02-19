@@ -2,7 +2,7 @@ export const shelter = {
   id: "shelter",
   title: "EE-ALARM: varjumine kohe",
   timeMinutes: 5,
-  difficulty: "Medium",
+  difficulty: "Keskmine",
   intro:
     "Said EE-ALARM ohuteavituse ja kuuled sireeni. Eesmärk: minna kiiresti varju ja käituda turvaliselt.",
   sources: [

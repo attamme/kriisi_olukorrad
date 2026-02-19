@@ -13,8 +13,8 @@ export default function ScenarioCard({ scenario, onClick }) {
 
   return (
     <div className="card scenarioCard" onClick={onClick} role="button" tabIndex={0}>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-        <div style={{ display: "grid", gap: 6 }}>
+      <div className="scenario-card-inner">
+        <div className="scenario-card-info">
           <div className="scenarioTitle">{scenario.title}</div>
           <div className="small">{scenario.intro}</div>
         </div>

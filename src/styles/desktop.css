@@ -1,0 +1,65 @@
+
+@media (min-width: 768px) {
+
+  .container {
+    max-width: 960px; 
+    padding: 30px;
+  }
+
+  .menu-view {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    align-items: start;
+  }
+  
+  .intro-card {
+    grid-column: 1 / -1;
+  }
+  .sources-card {
+    grid-column: 1 / -1;
+  }
+
+
+  .scenarioCard:hover {
+    transform: translateY(-4px);
+    background: var(--card2);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+    border-color: rgba(255,255,255,0.2);
+  }
+
+  
+  .play-view,
+  .info-view,
+  .result-view {
+    max-width: 520px; 
+    margin: 0 auto;  
+  }
+
+  
+  .choiceBtn {
+    padding: 16px;
+    font-size: 15px;
+  }
+
+  
+  .topbar {
+    padding: 16px 30px;
+    margin-bottom: 20px; 
+    background: rgba(11,18,32,0.85); 
+
+  
+  .scenarioTitle {
+    font-size: 18px;
+  }
+  .small {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .menu-view {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+}

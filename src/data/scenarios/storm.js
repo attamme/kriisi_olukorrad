@@ -2,7 +2,7 @@ export const storm = {
   id: "storm",
   title: "Torm: tugev tuul ja äike",
   timeMinutes: 6,
-  difficulty: "Medium",
+  difficulty: "Keskmine",
   intro:
     "Ilmateade: tugev tuul, äike ja sademed. Eesmärk: valmistuda, vähendada riske ja hoida end kursis.",
   sources: [

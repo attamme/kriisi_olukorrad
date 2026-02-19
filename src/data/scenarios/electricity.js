@@ -2,7 +2,7 @@ export const electricity = {
   id: "electricity",
   title: "Elektrikatkestus: õhtu ühikas",
   timeMinutes: 6,
-  difficulty: "Easy",
+  difficulty: "Kerge",
   intro:
     "Elekter läks ära. Telefon on 22%. Väljas on tuuline ja külm. Sinu eesmärk: hoida end turvaliselt ja teha mõistlikud otsused.",
   sources: [

@@ -1,4 +1,4 @@
-import { useMemo, useReducer } from "react";
+import { useMemo, useReducer, useEffect, useRef } from "react";
 import MobileShell from "./components/MobileShell.jsx";
 import TopBar from "./components/TopBar.jsx";
 import ScenarioCard from "./components/ScenarioCard.jsx";
@@ -6,6 +6,7 @@ import DialogueCard from "./components/DialogueCard.jsx";
 import ChoiceButton from "./components/ChoiceButton.jsx";
 import ProgressDots from "./components/ProgressDots.jsx";
 import ResultScreen from "./components/ResultScreen.jsx";
+import InfoPage from "./components/InfoPage.jsx";
 
 import { scenarios, getScenarioById } from "./data/scenarios.index.js";
 import {
@@ -18,6 +19,16 @@ import {
 
 function reducer(state, action) {
   switch (action.type) {
+    case "POPSTATE": {
+      return action.payload || createInitialState();
+    }
+    case "SHOW_INFO": {
+      return {
+        ...state,
+        mode: "info",
+        scenarioId: action.scenario.id
+      };
+    }
     case "START": {
       return startScenario(state, action.scenario);
     }
@@ -36,8 +47,6 @@ function reducer(state, action) {
 }
 
 function getNodeOrder(scenario) {
-  // Basic “progress” estimate: follow the first choice chain.
-  // (This keeps UI simple; later you can make it smarter.)
   const visited = new Set();
   const order = [];
   let id = scenario.startNode;
@@ -56,6 +65,51 @@ function getNodeOrder(scenario) {
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, undefined, createInitialState);
+  
+  const prevStateRef = useRef(state);
+  
+  const isPopState = useRef(false);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    const handlePopState = (event) => {
+      isPopState.current = true;
+      if (event.state) {
+        dispatch({ type: 'POPSTATE', payload: event.state });
+      } else {
+        dispatch({ type: 'MENU' });
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    if (isPopState.current) {
+        isPopState.current = false;
+        return;
+    }
+
+    const url = new URL(window.location);
+    if (state.mode === 'menu') {
+        url.search = '';
+    } else {
+        url.searchParams.set('mode', state.mode);
+        if (state.scenarioId) {
+            url.searchParams.set('scenario', state.scenarioId);
+        }
+    }
+
+    if (isFirstRender.current) {
+        window.history.replaceState(state, '', url);
+        isFirstRender.current = false;
+    } else {
+        window.history.pushState(state, '', url);
+    }
+
+    prevStateRef.current = state;
+  }, [state.mode, state.scenarioId]);
 
   const scenario = useMemo(() => {
     if (!state.scenarioId) return null;
@@ -106,26 +160,22 @@ export default function App() {
 
       <div className="container">
         {state.mode === "menu" ? (
-          <div className="grid">
-            <div className="card cardPad">
-              <div style={{ fontWeight: 900, fontSize: 18, marginBottom: 6 }}>
-                Õpi kriisides tegutsema (mobiilimäng)
-              </div>
-              <div className="small" style={{ lineHeight: 1.4 }}>
-                Valikud on lühikesed ja aruteluks sobivad. Pärast stsenaariumi saad tagasiside + ametlikud lingid.
-              </div>
+          <div className="grid menu-view">
+            <div className="card cardPad intro-card">
+              <div className="intro-title">Õpi kriisides tegutsema (mobiilimäng)</div>
+              <div className="small intro-text">Valikud on lühikesed ja aruteluks sobivad. Pärast stsenaariumi saad tagasiside + ametlikud lingid.</div>
             </div>
 
             {scenarios.map((s) => (
               <ScenarioCard
                 key={s.id}
                 scenario={s}
-                onClick={() => dispatch({ type: "START", scenario: s })}
+                onClick={() => dispatch({ type: "SHOW_INFO", scenario: s })}
               />
             ))}
 
-            <div className="card cardPad">
-              <div className="small" style={{ lineHeight: 1.4 }}>
+            <div className="card cardPad sources-card">
+              <div className="small">
                 Allikad põhinevad Eesti ametlikel valmisoleku materjalidel:
                 {" "}
                 <a className="sourceLink" href="https://www.olevalmis.ee" target="_blank" rel="noreferrer">
@@ -143,8 +193,16 @@ export default function App() {
           </div>
         ) : null}
 
+        {state.mode === "info" && scenario ? (
+          <InfoPage
+            scenario={scenario}
+            onStart={() => dispatch({ type: "START", scenario })}
+            onBack={() => dispatch({ type: "MENU" })}
+          />
+        ) : null}
+
         {state.mode === "play" && scenario && node ? (
-          <div className="grid">
+          <div className="grid play-view">
             <DialogueCard text={node.text} />
 
             <ProgressDots total={Math.max(progressOrder.length, 3)} activeIndex={activeIndex} />
@@ -161,7 +219,7 @@ export default function App() {
             </div>
 
             <div className="card cardPad">
-              <div className="small" style={{ display: "grid", gap: 8 }}>
+              <div className="small scenario-meta-grid">
                 <div><strong>Stsenaarium:</strong> {scenario.title}</div>
                 <div><strong>Eesmärk:</strong> {scenario.intro}</div>
               </div>
